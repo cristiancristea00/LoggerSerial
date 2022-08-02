@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from argparse import ArgumentParser
 from datetime import datetime
 from typing import NoReturn, TextIO
 from serial import Serial
@@ -25,7 +24,7 @@ class LoggerSerial:
         return self.__serial
 
     @serial.setter
-    def serial(self, serial) -> None:
+    def serial(self, serial: Serial) -> None:
         self.__serial = serial
 
     @property
@@ -33,7 +32,7 @@ class LoggerSerial:
         return self.__log_file
 
     @log_file.setter
-    def log_file(self, value: TextIO):
+    def log_file(self, value: TextIO) -> None:
         self.__log_file = value
 
     def __enter__(self) -> LoggerSerial:
@@ -63,12 +62,3 @@ class LoggerSerial:
             line = self.__read_line()
             self.__write_file(line)
             self.__print_line(line)
-
-
-def main():
-    with LoggerSerial('AVR128DA48', 'COM4', 460800) as logger:
-        logger.run()
-
-
-if __name__ == '__main__':
-    main()
