@@ -36,7 +36,8 @@ class LoggerSerial:
         self.__log_file = value
 
     def __enter__(self) -> LoggerSerial:
-        self.log_file = open(F'{self.name}.log', mode='a', encoding='UTF-8')
+        file_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        self.log_file = open(F'{self.name}_{file_time}.log', mode='a', encoding='UTF-8')
         return self
 
     def __exit__(self) -> None:
