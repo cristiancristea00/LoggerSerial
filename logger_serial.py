@@ -34,7 +34,23 @@ class LoggerSerial:
         """
 
         self.name: str = name
-        self.serial: Serial = Serial(port, baudrate)
+        self.serial: Serial = Serial(port=port, baudrate=baudrate, timeout=1)
+
+    @staticmethod
+    def __add_timestamp(line: str) -> str:
+        """
+        Adds the current date and time to the line.
+
+        Args:
+            line (str): The line
+
+        Returns:
+            str: The line with the timestamp added
+        """
+
+        time = datetime.now().strftime('[%Y/%m/%d - %H:%M:%S]')
+        line = F'{time} {line}\n'
+        return line
 
     @property
     def name(self) -> str:
@@ -151,21 +167,18 @@ class LoggerSerial:
 
     def __read_line(self) -> str:
         """
-        Reads a line from the serial port, adds the current time and and
-        date and returns it.
+        Reads a line from the serial port and returns it.
 
         Returns:
             str: The line
         """
 
         read_line: str = self.serial.readline().decode('UTF-8').strip()
-        time = datetime.now().strftime('[%d/%m/%Y - %H:%M:%S]')
-        line = F'{time} {read_line}\n'
-        return line
+        return read_line
 
-    def __write_file(self, line: str) -> None:
+    def __write_line(self, line: str) -> None:
         """
-        Writes a line to the log file and flushes it.
+        Writes a line to the log file.
 
         Args:
             line (str): The line
@@ -195,5 +208,11 @@ class LoggerSerial:
 
         while True:
             line: str = self.__read_line()
-            self.__write_file(line)
+
+            if not line:
+
+                continue
+
+            line = LoggerSerial.__add_timestamp(line)
+            self.__write_line(line)
             self.__print_line(line)

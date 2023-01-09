@@ -19,7 +19,14 @@ def main() -> NoReturn:
     arguments_parser = LoggerSerialParser()
     arguments = arguments_parser.parse()
     with LoggerSerial(arguments.name, arguments.port, arguments.baudrate) as logger:
-        logger.run()
+
+        try:
+
+            logger.run()
+
+        except KeyboardInterrupt:
+
+            print('Stopping the logger...')
 
 
 if __name__ == '__main__':
